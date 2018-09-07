@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jameschen.exercise.roomreservation.mapper.ReservationMapper" >
+
+    <resultMap id="BaseResultMap" type="com.jameschen.exercise.roomreservation.entity.ReservationEntity" >
+        <id column="ROOM_ID" property="roomId" jdbcType="BIGINT" />
+        <result column="GUEST_ID" property="guestId" jdbcType="BIGINT" />
+        <result column="NAME" property="roomName" jdbcType="VARCHAR" />
+        <result column="ROOM_NUMBER" property="roomNumber" jdbcType="VARCHAR" />
+        <result column="FIRST_NAME" property="firstName" jdbcType="VARCHAR" />
+        <result column="LAST_NAME" property="lastName" jdbcType="VARCHAR" />
+        <result column="RES_DATE" property="date" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        room.ROOM_ID, guest.GUEST_ID, room.NAME, room.ROOM_NUMBER,guest.FIRST_NAME, guest.LAST_NAME, reservation.RES_DATE
+    </sql>
+
+    
+    <select id="getAll" resultMap="BaseResultMap"  >
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM room
+		Join reservation On room.ROOM_ID = reservation.ROOM_ID
+		Join guest On reservation.GUEST_ID = guest.GUEST_ID
+		Order by room.ROOM_ID;
+    </select>
+    
+
+    <select id="getByDate" parameterType="java.sql.Date"  resultMap="BaseResultMap"  >
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM room
+		Left Join reservation On room.ROOM_ID = reservation.ROOM_ID
+		Left Join guest On reservation.GUEST_ID = guest.GUEST_ID
+		WHERE reservation.RES_DATE = #{id}
+		   OR reservation.RES_DATE is null
+		Order by room.ROOM_ID;
+    </select>
+    
+
+    <select id="getByName" parameterType="String"  resultMap="BaseResultMap"  >
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM room
+		Left Join reservation On room.ROOM_ID = reservation.ROOM_ID
+		Left Join guest On reservation.GUEST_ID = guest.GUEST_ID
+		WHERE guest.FIRST_NAME = #{id}
+  		   OR guest.LAST_NAME  = #{id}
+		Order by room.ROOM_ID;
+    </select>
+
+    <insert id="insert" parameterType="com.jameschen.exercise.roomreservation.entity.ReservationEntity" >
+       INSERT INTO 
+       		reservation
+       		(ROOM_ID, GUEST_ID, RES_DATE) 
+       	VALUES
+       		(#{roomId}, #{guestId}, #{date})
+    </insert>
+
+</mapper>
+
+
+
+

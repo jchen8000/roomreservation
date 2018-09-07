@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jameschen.exercise.roomreservation.mapper.RoomMapper" >
+
+    <resultMap id="BaseResultMap" type="com.jameschen.exercise.roomreservation.entity.RoomEntity" >
+        <id column="ROOM_ID" property="id" jdbcType="BIGINT" />
+        <result column="NAME" property="name" jdbcType="VARCHAR" />
+        <result column="ROOM_NUMBER" property="number" jdbcType="VARCHAR" />
+        <result column="BED_INFO" property="bedInfo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    
+    <sql id="Base_Column_List" >
+        ROOM_ID, NAME, ROOM_NUMBER, BED_INFO
+    </sql>
+
+    <select id="getAll" resultMap="BaseResultMap"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM ROOM
+    </select>
+    
+    <select id="getByName" parameterType="String" resultMap="BaseResultMap"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+	   FROM ROOM
+	   WHERE NAME = #{id}
+    </select>
+    
+    <select id="getByID" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+        SELECT 
+       <include refid="Base_Column_List" />
+	   FROM ROOM
+	   WHERE ROOM_ID = #{id}
+    </select>
+    
+
+</mapper>
